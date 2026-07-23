@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jelajah Bali – Panduan Wisata Bali Terlengkap</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        baliGold: '#D4AF37',
+                        baliGreen: '#1B4332',
+                        baliOcean: '#0077B6',
+                        baliCream: '#FDFBF7'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-[#FDFBF7] text-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-300 font-sans min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="sticky top-0 z-40 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-amber-100 dark:border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('destinasi')">
+                <span class="text-2xl">🌴</span>
+                <span class="text-xl font-bold bg-gradient-to-r from-emerald-700 via-teal-600 to-amber-600 bg-clip-text text-transparent">Jelajah Bali</span>
+            </div>
+            
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+                <button onclick="switchTab('destinasi')" id="nav-destinasi" class="nav-btn px-4 py-2 rounded-full bg-amber-500 text-white shadow-md">Wisata</button>
+                <button onclick="switchTab('kuliner')" id="nav-kuliner" class="nav-btn px-4 py-2 rounded-full hover:bg-amber-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300">Kuliner</button>
+                <button onclick="switchTab('hotel')" id="nav-hotel" class="nav-btn px-4 py-2 rounded-full hover:bg-amber-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300">Hotel & Villa</button>
+                <button onclick="switchTab('budaya')" id="nav-budaya" class="nav-btn px-4 py-2 rounded-full hover:bg-amber-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300">Budaya & Kamus</button>
+                <button onclick="switchTab('tools')" id="nav-tools" class="nav-btn px-4 py-2 rounded-full hover:bg-amber-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300">Itinerary & Tools</button>
+            </div>
+
+            <button id="themeToggle" class="p-2.5 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:scale-105 transition-transform">
+                <i data-lucide="moon" class="w-5 h-5 dark:hidden text-zinc-700"></i>
+                <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-amber-400"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative bg-gradient-to-b from-amber-500/10 via-teal-500/5 to-transparent pt-12 pb-8 px-4 text-center">
+        <div class="max-w-3xl mx-auto">
+            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold mb-4">
+                ✨ Om Swastiastu – Selamat Datang di Bali
+            </span>
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-3">
+                Panduan Wisata Bali Terlengkap
+            </h1>
+            <p class="text-zinc-600 dark:text-zinc-400 text-sm md:text-base mb-6">
+                Eksplorasi destinasi impian, kuliner khas, penginapan mewah, hingga hitung estimasi anggaran liburanmu.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="relative max-w-xl mx-auto flex items-center shadow-lg rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-amber-200/50 dark:border-zinc-800">
+                <i data-lucide="search" class="w-5 h-5 ml-4 text-zinc-400"></i>
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Cari Tanah Lot, Sunset, Ubud, Kuliner Halal..." class="w-full py-3.5 px-3 bg-transparent focus:outline-none text-sm dark:text-white">
+            </div>
+        </div>
+    </header>
+
+    <!-- PETA INTERAKTIF KABUPATEN -->
+    <section class="max-w-7xl mx-auto px-4 py-6 w-full">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold flex items-center gap-2">
+                <i data-lucide="navigation" class="w-5 h-5 text-amber-500"></i> Pilih Wilayah / Kabupaten
+            </h2>
+            <span id="districtLabel" class="text-xs text-zinc-500">Menampilkan Seluruh Bali</span>
+        </div>
+
+        <div class="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-none" id="districtButtons">
+            <!-- District Buttons Injected by JS -->
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1">
+        
+        <!-- KATALOG GRID (DESTINASI, KULINER, HOTEL) -->
+        <div id="catalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Cards Injected by JS -->
+        </div>
+
+        <!-- TAB BUDAYA & KAMUS -->
+        <div id="budayaSection" class="hidden grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-5 h-5 text-teal-600"></i> Kamus Percakapan Bahasa Bali
+                </h3>
+                <div class="space-y-3" id="dictionaryList"></div>
+            </div>
+
+            <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="info" class="w-5 h-5 text-amber-500"></i> Tata Etika & Nilai Budaya Bali
+                </h3>
+                <div class="space-y-4">
+                    <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+                        <h4 class="font-bold text-amber-800 dark:text-amber-400 text-sm mb-1">Tri Hita Karana</h4>
+                        <p class="text-xs text-zinc-600 dark:text-zinc-300">
+                            Falsafah hidup masyarakat Bali yang menjaga keharmonisan antara Manusia dengan Tuhan (Parahyangan), Manusia dengan Sesama (Pawongan), dan Manusia dengan Alam (Palemahan).
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+                            <h5 class="font-bold text-emerald-700 dark:text-emerald-400 text-xs mb-2">✅ Boleh Dilakukan (Do's)</h5>
+                            <ul class="text-xs space-y-1 text-zinc-600 dark:text-zinc-300">
+                                <li>• Pakai sarung/kain Bali & selendang saat ke Pura.</li>
+                                <li>• Menjaga ucapan & kesopanan.</li>
+                                <li>• Menghormati upacara keagamaan.</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+                            <h5 class="font-bold text-rose-700 dark:text-rose-400 text-xs mb-2">❌ Dilarang (Don'ts)</h5>
+                            <ul class="text-xs space-y-1 text-zinc-600 dark:text-zinc-300">
+                                <li>• Masuk area suci saat berduka/haid.</li>
+                                <li>• Memanjat bangunan palinggih Pura.</li>
+                                <li>• Injak Canang Sari di jalan.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB TOOLS & CALCULATOR -->
+        <div id="toolsSection" class="hidden grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Budget Calculator -->
+            <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="calculator" class="w-5 h-5 text-amber-500"></i> Kalkulator Estimasi Biaya Liburan
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1">Durasi Liburan (Hari)</label>
+                        <input type="number" id="calcDays" value="3" min="1" oninput="calculateBudget()" class="w-full p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">Tipe Penginapan / Malam</label>
+                        <select id="calcHotel" onchange="calculateBudget()" class="w-full p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm font-semibold dark:bg-zinc-800">
+                            <option value="250000">Hostel / Guest House (Rp 250.000)</option>
+                            <option value="750000" selected>Hotel Bintang 3 (Rp 750.000)</option>
+                            <option value="2500000">Private Villa / Resort (Rp 2.500.000)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">Transportasi / Hari</label>
+                        <select id="calcTransport" onchange="calculateBudget()" class="w-full p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-transparent text-sm font-semibold dark:bg-zinc-800">
+                            <option value="80000">Sewa Motor (Rp 80.000)</option>
+                            <option value="350000" selected>Sewa Mobil Lepas Kunci (Rp 350.000)</option>
+                            <option value="700000">Mobil + Supir + Bensin (Rp 700.000)</option>
+                        </select>
+                    </div>
+                    <div class="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center">
+                        <span class="font-bold text-sm">Total Estimasi Biaya:</span>
+                        <span id="totalBudgetResult" class="text-2xl font-black text-emerald-600 dark:text-amber-400">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Packing Checklist -->
+            <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="check-square" class="w-5 h-5 text-emerald-600"></i> Checklist Koper Pintar
+                </h3>
+                <div class="mb-4">
+                    <label class="block text-xs font-bold mb-2">Pilih Lamanya Liburan:</label>
+                    <div class="flex gap-2">
+                        <button onclick="setPackingDays(3)" class="packing-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-white">3 Hari</button>
+                        <button onclick="setPackingDays(7)" class="packing-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-zinc-100 dark:bg-zinc-800">7 Hari</button>
+                        <button onclick="setPackingDays(14)" class="packing-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-zinc-100 dark:bg-zinc-800">14 Hari</button>
+                    </div>
+                </div>
+                <div id="packingListContainer" class="space-y-2"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DETAIL ITEM -->
+    <div id="detailModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-zinc-900 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative border border-zinc-200 dark:border-zinc-800 shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-xs font-bold dark:text-white">✕ Close</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-12 border-t border-zinc-200 dark:border-zinc-800 py-6 text-center text-xs text-zinc-500 bg-white dark:bg-zinc-900">
+        <p>© 2026 Jelajah Bali. Panduan wisata Pulau Dewata terlengkap.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATASET BALI ---
+        const districts = ['Semua', 'Badung', 'Denpasar', 'Gianyar', 'Tabanan', 'Bangli', 'Karangasem', 'Buleleng', 'Klungkung', 'Jembrana'];
+        
+        const database = [
+            {
+                id: 'dest-1',
+                type: 'destinasi',
+                name: 'Pura Tanah Lot',
+                category: 'Pura & Sejarah',
+                district: 'Tabanan',
+                rating: 4.7,
+                reviewsCount: 92450,
+                pros: ['View sunset terbaik di Bali', 'Akses mudah', 'Fasilitas lengkap'],
+                cons: ['Ramai pengunjung sore hari', 'Banyak pedagang asongan'],
+                description: 'Pura Tanah Lot adalah salah satu ikon pariwisata Bali paling terkenal. Pura ini berdiri di atas batu karang besar lepas pantai dan menyajikan pemandangan matahari terbenam yang memukau.',
+                address: 'Beraban, Kediri, Tabanan, Bali 82121',
+                hours: '07.00 - 19.00 WITA',
+                ticket: 'Rp 30.000 (Domestik)',
+                bestTime: '16.30 WITA',
+                tips: 'Datang lebih awal sebelum jam 16.00 untuk mendapatkan spot foto terbaik di area tebing.',
+                mapsUrl: 'https://maps.google.com/?q=Pura+Tanah+Lot',
+                image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'dest-2',
+                type: 'destinasi',
+                name: 'Tegallalang Rice Terrace',
+                category: 'Alam & Budaya',
+                district: 'Gianyar',
+                rating: 4.6,
+                reviewsCount: 38100,
+                pros: ['Pemandangan sangat asri', 'Banyak spot foto aesthetic', 'Dekat Ubud'],
+                cons: ['Jalur tangga cukup terjal', 'Banyak retribusi lokal'],
+                description: 'Lanskap terasering sawah bertingkat khas sistem irigasi Subak Bali. Tempat favorit wisatawan untuk menikmati udara segar dan keasrian alam Ubud.',
+                address: 'Jl. Raya Tegallalang, Gianyar, Bali 80561',
+                hours: '08.00 - 18.00 WITA',
+                ticket: 'Rp 25.000',
+                bestTime: '08.00 WITA',
+                tips: 'Gunakan sepatu kets yang nyaman untuk menyusuri tangga pematang sawah.',
+                mapsUrl: 'https://maps.google.com/?q=Tegallalang+Rice+Terrace',
+                image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'kuliner-1',
+                type: 'kuliner',
+                name: 'Warung Mak Beng Sanur',
+                category: 'Makanan Lokal',
+                district: 'Denpasar',
+                rating: 4.7,
+                reviewsCount: 22100,
+                pros: ['Cita rasa otentik sejak 1941', 'Pelayanan cepat', 'Harga terjangkau'],
+                cons: ['Antrean panjang jam makan siang', 'Menu cuma 1 macam'],
+                description: 'Ikon kuliner legendaris Sanur yang menyajikan set menu Ikan Goreng, Sup Kepala Ikan Bumbu Kuning, dan Sambal Pedas Khas yang nikmat.',
+                address: 'Jl. Hang Tuah No.45, Sanur, Denpasar, Bali',
+                hours: '08.00 - 22.00 WITA',
+                ticket: 'Rp 55.000 / Set',
+                bestTime: '11.00 WITA',
+                tips: 'Pesan es jeruk segar untuk menetralisir rasa pedas sambalnya.',
+                mapsUrl: 'https://maps.google.com/?q=Warung+Mak+Beng',
+                image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'hotel-1',
+                type: 'hotel',
+                name: 'Mandapa, Ritz-Carlton Reserve',
+                category: 'Luxury Resort & Villa',
+                district: 'Gianyar',
+                rating: 4.9,
+                reviewsCount: 1850,
+                pros: ['Pelayanan butler pribadi', 'Privasi sangat tinggi', 'View Sungai Ayung'],
+                cons: ['Harga kelas ultra-premium'],
+                description: 'Resort paling mewah di Ubud dengan pemandangan hutan tropis dan sungai Ayung, dilengkapi fasilitas vila kolam renang pribadi.',
+                address: 'Kedewatan, Ubud, Gianyar, Bali',
+                hours: 'Check-in: 15.00',
+                ticket: 'Mulai Rp 12.000.000 / malam',
+                bestTime: 'Sepanjang tahun',
+                tips: 'Coba santap malam romantis di sangkar bambu Kubu Restaurant.',
+                mapsUrl: 'https://maps.google.com/?q=Mandapa+Ritz+Carlton',
+                image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'
+            }
+        ];
+
+        const dictionary = [
+            { indo: 'Om Swastiastu', bali: 'Om Swastiastu', phonetic: 'Om Swa-stee-as-too', note: 'Salam pembuka khas Bali' },
+            { indo: 'Terima Kasih', bali: 'Matur Suksma', phonetic: 'Mah-toor Sook-smah', note: 'Ungkapan rasa terima kasih' },
+            { indo: 'Sama-sama', bali: 'Suksma Mewali', phonetic: 'Sook-smah Meh-wah-lee', note: 'Jawaban terima kasih' },
+            { indo: 'Berapa Harganya?', bali: 'Kuda hargane niki?', phonetic: 'Koo-dah har-gah-neh nee-kee', note: 'Digunakan saat menawar barang' }
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let currentTab = 'destinasi';
+        let currentDistrict = 'Semua';
+        let currentSearch = '';
+        let currentPackingDays = 3;
+
+        // --- INIT APP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDistrictButtons();
+            renderCatalog();
+            renderDictionary();
+            calculateBudget();
+            setPackingDays(3);
+            lucide.createIcons();
+        });
+
+        // Dark Mode Toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Render District Buttons
+        function renderDistrictButtons() {
+            const container = document.getElementById('districtButtons');
+            container.innerHTML = districts.map(d => `
+                <button onclick="setDistrict('${d}')" class="district-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${currentDistrict === d ? 'bg-emerald-700 text-white border-emerald-700 shadow-md scale-105' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:border-amber-400'}">
+                    ${d}
+                </button>
+            `).join('');
+        }
+
+        function setDistrict(district) {
+            currentDistrict = district;
+            document.getElementById('districtLabel').innerText = district === 'Semua' ? 'Menampilkan Seluruh Bali' : `Kabupaten: ${district}`;
+            renderDistrictButtons();
+            renderCatalog();
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn px-4 py-2 rounded-full hover:bg-amber-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300';
+            });
+            const activeBtn = document.getElementById(`nav-${tab}`);
+            if(activeBtn) activeBtn.className = 'nav-btn px-4 py-2 rounded-full bg-amber-500 text-white shadow-md';
+
+            const catalogGrid = document.getElementById('catalogGrid');
+            const budayaSec = document.getElementById('budayaSection');
+            const toolsSec = document.getElementById('toolsSection');
+
+            catalogGrid.className = 'hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+            budayaSec.className = 'hidden grid-cols-1 lg:grid-cols-2 gap-8';
+            toolsSec.className = 'hidden grid-cols-1 lg:grid-cols-2 gap-8';
+
+            if (['destinasi', 'kuliner', 'hotel'].includes(tab)) {
+                catalogGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+                renderCatalog();
+            } else if (tab === 'budaya') {
+                budayaSec.className = 'grid grid-cols-1 lg:grid-cols-2 gap-8';
+            } else if (tab === 'tools') {
+                toolsSec.className = 'grid grid-cols-1 lg:grid-cols-2 gap-8';
+            }
+        }
+
+        function handleSearch() {
+            currentSearch = document.getElementById('searchInput').value.toLowerCase();
+            renderCatalog();
+        }
+
+        // Render Catalog Cards
+        function renderCatalog() {
+            const grid = document.getElementById('catalogGrid');
+            const filtered = database.filter(item => {
+                const matchTab = item.type === currentTab;
+                const matchDistrict = currentDistrict === 'Semua' || item.district === currentDistrict;
+                const matchSearch = item.name.toLowerCase().includes(currentSearch) || item.category.toLowerCase().includes(currentSearch);
+                return matchTab && matchDistrict && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-zinc-400 text-sm">Tidak ada data yang cocok untuk filter ini.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                    <div class="relative h-52 overflow-hidden">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full font-semibold">${item.district}</div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase">${item.category}</span>
+                                <div class="flex items-center gap-1 text-xs font-bold text-amber-500">
+                                    ★ <span>${item.rating}</span> <span class="text-zinc-400 font-normal">(${item.reviewsCount.toLocaleString()})</span>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2 group-hover:text-amber-500 transition-colors">${item.name}</h3>
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4">${item.description}</p>
+                        </div>
+                        <div>
+                            <div class="text-xs text-zinc-500 mb-4">⏰ ${item.hours}</div>
+                            <div class="flex gap-2">
+                                <button onclick="openModal('${item.id}')" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition-colors">Detail Lengkap</button>
+                                <a href="${item.mapsUrl}" target="_blank" class="p-2.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 rounded-xl text-zinc-700 dark:text-zinc-300">📍</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Modal Logic
+        function openModal(id) {
+            const item = database.find(d => d.id === id);
+            if (!item) return;
+
+            document.getElementById('modalContent').innerHTML = `
+                <img src="${item.image}" class="w-full h-60 object-cover rounded-2xl mb-4">
+                <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold">${item.category} • ${item.district}</span>
+                <h2 class="text-2xl font-black my-2 dark:text-white">${item.name}</h2>
+                <p class="text-xs text-zinc-600 dark:text-zinc-300 mb-4">${item.description}</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-xs">
+                        <div class="font-bold text-emerald-600 mb-1">👍 Kelebihan</div>
+                        ${item.pros.map(p => `<div>• ${p}</div>`).join('')}
+                    </div>
+                    <div class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-xs">
+                        <div class="font-bold text-rose-600 mb-1">💡 Catatan</div>
+                        ${item.cons.map(c => `<div>• ${c}</div>`).join('')}
+                    </div>
+                </div>
+                <div class="text-xs space-y-1 mb-6 dark:text-zinc-300">
+                    <div>📍 <strong>Alamat:</strong> ${item.address}</div>
+                    <div>🎟 <strong>Tiket:</strong> ${item.ticket}</div>
+                    <div>💡 <strong>Tips:</strong> ${item.tips}</div>
+                </div>
+                <a href="${item.mapsUrl}" target="_blank" class="w-full py-3 bg-amber-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2">Buka di Google Maps</a>
+            `;
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        // Calculator & Checklist Logic
+        function calculateBudget() {
+            const days = parseInt(document.getElementById('calcDays').value) || 1;
+            const hotel = parseInt(document.getElementById('calcHotel').value);
+            const transport = parseInt(document.getElementById('calcTransport').value);
+            const total = (days * hotel) + (days * transport) + (days * 150000) + (days * 100000);
+            document.getElementById('totalBudgetResult').innerText = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        function setPackingDays(days) {
+            currentPackingDays = days;
+            const container = document.getElementById('packingListContainer');
+            const items = [
+                `Pakaian Santai (${days * 2} Stel)`,
+                'Kain Sarung Bali (masuk Pura)',
+                'Sunscreen SPF 50+',
+                'Kacamata & Topi',
+                'Obat Pribadi & Anti Nyamuk'
+            ];
+            container.innerHTML = items.map((item, idx) => `
+                <label class="flex items-center gap-3 p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 text-xs font-medium cursor-pointer">
+                    <input type="checkbox" class="w-4 h-4 accent-amber-500 rounded">
+                    <span>${item}</span>
+                </label>
+            `).join('');
+        }
+
+        function renderDictionary() {
+            const container = document.getElementById('dictionaryList');
+            container.innerHTML = dictionary.map(dict => `
+                <div class="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-800">
+                    <div class="text-xs text-zinc-400 font-medium">Bahasa Indonesia: ${dict.indo}</div>
+                    <div class="text-lg font-extrabold text-emerald-700 dark:text-amber-400">${dict.bali}</div>
+                    <div class="text-xs italic text-zinc-500 font-medium">"${dict.phonetic}"</div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
